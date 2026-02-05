@@ -12,7 +12,7 @@ app.post("/notes", (req, res) => {
     // we will use status code 201 for created
     //this is the actual way to send response
     res.status(201).json({
-        message: "Notes added successfully"
+        message: "Notes added successfully" 
     })
 
 
