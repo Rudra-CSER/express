@@ -26,5 +26,7 @@ html{
   display: flex;
   gap: 1rem;
   padding-block: 1rem;
+  flex-wrap: wrap;
+  
   padding-inline: 3rem;
 }

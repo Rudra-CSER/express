@@ -1,7 +1,8 @@
 const express = require("express")
 const notesModel = require("./models/notes.model")
 const cors = require("cors")
-
+// for cross origin resource sharing - to allow frontend and backend to communicate with each other 
+// by default, frontend and backend are on different ports, so we need to allow them to communicate with each other   
 
 const app = express()
 app.use(cors())
