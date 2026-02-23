@@ -1,61 +1,56 @@
 const express = require("express")
 const notesModel = require("./models/notes.model")
 const cors = require("cors")
-
-// for cross origin resource sharing - to allow frontend and backend to communicate with each other 
-// by default, frontend and backend are on different ports, so we need to allow them to communicate with each other   
+const path = require("path")
 
 const app = express()
+
 app.use(cors())
 app.use(express.json())
-// Serve the production build output (Vite) placed in Backend/public/dist
+app.use(express.static(path.join(__dirname, "..", "public", "dist")))
 
-
-//post API
-app.post("/notes", async(req, res) => {
-   
-   const {title, Description} = req.body
-    const Notes = await notesModel.create({
-        title,
-        Description
-    })
-
-    res.status(201).json({
-        message: "Notes created successfully",
-        Notes
-    })
+app.post("/notes", async (req, res) => {
+    try {
+        const { title, Description } = req.body
+        const Notes = await notesModel.create({ title, Description })
+        res.status(201).json({ message: "Notes created successfully", Notes })
+    } catch (err) {
+        res.status(500).json({ message: "Failed to create note", error: err.message })
+    }
 })
 
-//Get API 
 app.get("/notes", async (req, res) => {
-    const Notes = await notesModel.find()
-    res.status(201).json({
-        Message: "Notes fetched successfully",
-        Notes
-    })
+    try {
+        const Notes = await notesModel.find()
+        res.status(200).json({ message: "Notes fetched successfully", Notes })
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch notes", error: err.message })
+    }
 })
-
-
-// patch API
 
 app.patch("/notes/:id", async (req, res) => {
- const id = req.params.id
- const {title , Description} = req.body
-
-const updatedNotes = await notesModel.findByIdAndUpdate(id, {title, Description})
-
-res.status(200).json({
-    message: "Notes updated successfully",
-    updatedNotes
+    try {
+        const id = req.params.id
+        const { title, Description } = req.body
+        const updatedNotes = await notesModel.findByIdAndUpdate(id, { title, Description }, { new: true })
+        res.status(200).json({ message: "Notes updated successfully", updatedNotes })
+    } catch (err) {
+        res.status(500).json({ message: "Failed to update note", error: err.message })
+    }
 })
 
-})
-// delete API
 app.delete("/notes/:id", async (req, res) => {
-  const id = req.params.id
-  await notesModel.findByIdAndDelete(id)
-  res.status(200).json({ message: "Notes deleted successfully" })
+    try {
+        const id = req.params.id
+        await notesModel.findByIdAndDelete(id)
+        res.status(200).json({ message: "Notes deleted successfully" })
+    } catch (err) {
+        res.status(500).json({ message: "Failed to delete note", error: err.message })
+    }
 })
 
+app.get("/{*splat}", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "public", "dist", "index.html"))
+})
 
- module.exports = app
+module.exports = app

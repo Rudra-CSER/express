@@ -1,14 +1,10 @@
-
+require("dotenv").config()
 const app = require("./src/app")
 const connectToDB = require("./src/config/database")
-const path = require("path")
-
-
-app.use(express.static(path.join(__dirname, "public", "dist")))
 
 connectToDB()
 
-app.listen(3000, ()=>{
-    console.log(`Server stated `);
-    
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`)
 })

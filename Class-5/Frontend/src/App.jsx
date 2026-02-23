@@ -23,7 +23,7 @@ function App() {
 
 function getNotes() {
   //declare aixox.get to fetch data from backend and set it to state variable Notes
-  axios.get("http://localhost:3000/notes").then((res) => {
+  axios.get("https://vivid-notesai.onrender.com/notes").then((res) => {
     //  console.log(res.data);
    setNotes(res.data.Notes)
   })
@@ -35,7 +35,7 @@ function getNotes() {
          const {title, Description} = e.target.elements
          console.log(title.value,Description.value);
 //we have to make an axios post request to send data to backend
-         axios.post("http://localhost:3000/notes", {
+         axios.post("https://vivid-notesai.onrender.com/notes", {
            title: title.value,
            Description: Description.value
          }).then((res)=>{
@@ -48,7 +48,7 @@ function deleteNote(noteid) {
       
      console.log(noteid)
 
-    axios.delete("http://localhost:3000/notes/" + noteid).then((res) => {
+    axios.delete("https://vivid-notesai.onrender.com/notes/" + noteid).then((res) => {
       console.log(res.data);
       getNotes() // after deleting a note we have to fetch the updated list of notes from backend to update the UI
     })
@@ -68,7 +68,7 @@ function updateNote(e) {
   noteId = Notes[idx]._id
 
   // send patch to backend for the resolved noteId
-  axios.patch(`http://localhost:3000/notes/${noteId}`, {
+  axios.patch(`https://vivid-notesai.onrender.com/notes/${noteId}`, {
     title: title.value,
     Description: Description.value,
   })
