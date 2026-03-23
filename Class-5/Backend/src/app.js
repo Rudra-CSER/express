@@ -7,7 +7,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static(path.join(__dirname, "..", "public", "dist")))
+app.use(express.static(path.join(__dirname, "..", "public", "dist"))) // this is to serve the static files from the frontend build helps to join the npm run bulid file to server as in backend folder 
 
 app.post("/notes", async (req, res) => {
     try {

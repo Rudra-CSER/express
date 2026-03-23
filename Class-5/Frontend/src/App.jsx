@@ -78,7 +78,7 @@ function updateNote(e) {
     })
 }
 
-
+ggggd 
 //we have to use useEffect to call the api when the component mounts, otherwise it will cause an infinite loop of re-rendering
 
 useEffect(() => {
