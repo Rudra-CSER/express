@@ -1,6 +1,6 @@
 
 const usermodel = require('../models/user.model');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
@@ -9,14 +9,16 @@ async function LoginController (req ,res ) {
     const { username , email, password } = req.body;
     try {
         const user = await usermodel.findOne({ $or:[{email}, {username}] });
+       
 
         if (!user) {
-            return res.status(400).json({ message: 'Invalid Username' + (user.email == email)? 'User Email didnt match' :'User name didnt match'});
+            return res.status(404).json({ message: 'Invalid Username' + (user.email == email)? 'User Email didnt match' :'User name didnt match'});
         }
 
-        const isPasswordValid = hashed = user.password
+         
+        const hashedPassword = await bcrypt.compare(password, user.password);
 
-        if (!isPasswordValid) {
+        if (!hashedPassword) {
             return res.status(400).json({ message: 'Invalid Password' });
         }
 
@@ -36,14 +38,14 @@ async function RegisterController(req, res) {
         try { //$or means eather this or that select form them 
             const extinguser = await usermodel.findOne({ $or: [{ username }, { email }] });
             if (extinguser) {
-               return res.status(409).json({ message: 'username alrady exists' + (extinguser.email == email) ? 'Email already exist' : 'User Name alreay exist ' })
+               return res.status(409).json({ message: 'username alrady exists' + ((extinguser.email == email) ? 'Email already exist' : 'User Name alreay exist ')})
             }
     
-            const hashed = crypto.createHash('sha256').update(password).digest('hex')
-    
+            const hashed = await bcrypt.hash(password, 10);
+            
             //save the user
             const user = await usermodel.create({ username, email, bio, profile_image, password: hashed });
-    
+
             const token = jwt.sign({
                 userId: user._id,
                 email: user.email,
